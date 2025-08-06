@@ -1,4 +1,4 @@
-package dev.thirvo.identityservice.repo;
+package dev.thirvo.identityservice.repository;
 
 import dev.thirvo.identityservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

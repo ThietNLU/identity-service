@@ -8,3 +8,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/identity_service"
     username: root
     password: 120605
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
