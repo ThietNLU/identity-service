@@ -4,6 +4,7 @@ import dev.thirvo.identityservice.dto.request.UserCreationRequest;
 import dev.thirvo.identityservice.dto.request.UserUpdateRequest;
 import dev.thirvo.identityservice.entity.User;
 import dev.thirvo.identityservice.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody UserCreationRequest request) {
+    public User createUser(@RequestBody @Valid UserCreationRequest request) {
         return userService.createUser(request);
     }
 
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request){
+    public User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
 
