@@ -3,6 +3,8 @@ package dev.thirvo.identityservice.service;
 import dev.thirvo.identityservice.dto.request.UserCreationRequest;
 import dev.thirvo.identityservice.dto.request.UserUpdateRequest;
 import dev.thirvo.identityservice.entity.User;
+import dev.thirvo.identityservice.exception.AppException;
+import dev.thirvo.identityservice.exception.ErrorCode;
 import dev.thirvo.identityservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
         User user = new User();
 
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         user.setUsername(request.getUsername());
@@ -51,6 +53,22 @@ public class UserService {
 
     public boolean deleteUserById(String id) {
         userRepository.deleteById(id);
+        return true;
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
+    public boolean addAllRequest(List<UserCreationRequest> requests) {
+        for (UserCreationRequest request : requests) {
+            try {
+                createUser(request);
+            } catch (RuntimeException e) {
+                System.err.println("Error creating user: " + e.getMessage());
+                return false;
+            }
+        }
         return true;
     }
 }
