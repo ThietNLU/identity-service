@@ -1,17 +1,19 @@
-package dev.thirvo.identityservice.dto.request;
+package dev.thirvo.identityservice.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+public class UserResponse {
+    String id;
+    String username;
     String password;
     String firstName;
     String lastName;

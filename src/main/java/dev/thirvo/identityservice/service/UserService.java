@@ -2,32 +2,35 @@ package dev.thirvo.identityservice.service;
 
 import dev.thirvo.identityservice.dto.request.UserCreationRequest;
 import dev.thirvo.identityservice.dto.request.UserUpdateRequest;
+import dev.thirvo.identityservice.dto.response.UserResponse;
 import dev.thirvo.identityservice.entity.User;
 import dev.thirvo.identityservice.exception.AppException;
 import dev.thirvo.identityservice.exception.ErrorCode;
+import dev.thirvo.identityservice.mapper.UserMapper;
 import dev.thirvo.identityservice.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
+    UserMapper userMapper;
 
     public User createUser(UserCreationRequest request) {
-        User user = new User();
-
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setBirthDate(request.getBirthDate());
+        User user = userMapper.toUser(request);
+
         return userRepository.save(user);
     }
 
@@ -35,20 +38,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(String id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserResponse getUserById(String id) {
+        return userMapper.toUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found")));
     }
 
-    public User updateUser(String id, UserUpdateRequest request) {
-        User user = getUserById(id);
+    public UserResponse updateUser(String id, UserUpdateRequest request) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setBirthDate(request.getBirthDate());
+        userMapper.updateUser(user, request);
 
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public boolean deleteUserById(String id) {

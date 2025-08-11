@@ -3,9 +3,14 @@ package dev.thirvo.identityservice.controller;
 import dev.thirvo.identityservice.dto.request.ApiResponse;
 import dev.thirvo.identityservice.dto.request.UserCreationRequest;
 import dev.thirvo.identityservice.dto.request.UserUpdateRequest;
+import dev.thirvo.identityservice.dto.response.UserResponse;
 import dev.thirvo.identityservice.entity.User;
+import dev.thirvo.identityservice.mapper.UserMapper;
 import dev.thirvo.identityservice.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
     public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -43,12 +49,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") String id) {
+    public UserResponse getUserById(@PathVariable("id") String id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
 
