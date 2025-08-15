@@ -1,14 +1,13 @@
-package dev.thirvo.identityservice.dto.response;
+package dev.thirvo.identityservice.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationResponse {
+public class InstrospectRequest {
     String token;
-    boolean authenticated;
 }
